@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demospringboot.mapper.UserMapper" >
+  <select id="queryAll" resultType="com.example.demospringboot.entity.User">
+    SELECT * FROM user
+  </select>
+
+  <select id="lookForSameUserName" parameterType="String" resultType="com.example.demospringboot.entity.User" >
+    SELECT * FROM user WHERE user_name = #{userName}
+  </select>
+
+  <select id="lookForSameUserId" parameterType="long" resultType="com.example.demospringboot.entity.User" >
+    SELECT * FROM user WHERE id = #{userId}
+  </select>
+
+  <insert id="createUser" parameterType="com.example.demospringboot.entity.User" useGeneratedKeys="true"  >
+    INSERT INTO user (user_name, password) VALUES (#{userName}, #{password})
+  </insert>
+</mapper>
