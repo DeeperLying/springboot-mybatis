@@ -13,18 +13,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/inviteCode")
-public class InviteCodeController {
+public class CodeInviteController {
 
   @Autowired
   UserServicesImpl UserServicesImpl;
 
   @Autowired
   InviteCodeMapper inviteCodeMapper;
+
+  @Autowired
+  RedisTemplate redisTemplate;
 
   @PostMapping("/create")
   public ResultCommon postMethodName(@RequestBody InviteCode inviteCode) {
@@ -38,6 +42,9 @@ public class InviteCodeController {
 
     String code = CreateUUID.generateInviteCode(userId);
     inviteCode.setCode(code);
+
+    System.out.println(code + "=======================Redis");
+    redisTemplate.boundValueOps(code).set(userId);
 
     int isSave = inviteCodeMapper.createInviteCode(inviteCode);
 

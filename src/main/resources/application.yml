@@ -9,7 +9,7 @@ spring:
     data.redis:
         host: localhost
         port: 6379
-        password: Redis123
+        password:
         database: 0
 mybatis:
     mapper-locations: classpath:mapper/*.xml
