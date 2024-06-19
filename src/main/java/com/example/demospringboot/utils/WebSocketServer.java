@@ -20,9 +20,9 @@ import jakarta.websocket.server.ServerEndpoint;
 @ServerEndpoint("/api/websocket/{userId}")
 public class WebSocketServer {
 
-  private static final CopyOnWriteArraySet<Session> sessionList = new CopyOnWriteArraySet<>();
+  public static final CopyOnWriteArraySet<Session> sessionList = new CopyOnWriteArraySet<>();
 
-  private static final Map<String, Session> sessionPool = new HashMap<>();
+  public static final Map<String, Session> sessionPool = new HashMap<>();
 
   @OnOpen
   public void onOpen(@PathParam(value = "userId") String userId, Session session) {
@@ -31,6 +31,7 @@ public class WebSocketServer {
     try {
       sessionList.add(session);
       sessionPool.put(userId, session);
+      System.out.println(sessionPool);
       System.out.println("【WebSocket消息】有新的连接，总数为：" + sessionList.size());
     } catch (Exception e) {
       e.printStackTrace();
@@ -41,6 +42,19 @@ public class WebSocketServer {
   public void onClose(Session session) {
     try {
       sessionList.remove(session);
+
+      String userIdToRemove = null;
+      for(Map.Entry<String, Session> entry : sessionPool.entrySet()) {
+        if (entry.getValue().equals(session)) {
+          userIdToRemove = entry.getKey();
+          break;
+        }
+      }
+
+      if (userIdToRemove != null) {
+        sessionPool.remove(userIdToRemove);
+      }
+
       System.out.println("【WebSocket消息】连接断开，总数为：" + sessionList.size());
     } catch (Exception e) {
       e.printStackTrace();
